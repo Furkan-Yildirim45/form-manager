@@ -1,5 +1,10 @@
 .App {
   text-align: center;
+  flex-grow: 1; /* .App container'ının kalan alanı doldurmasını sağla */
+  min-height: 100vh; /* Ekranın tamamını kaplamak için minimum yükseklik ayarlandı */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* İçeriği dikeyde düzgün şekilde yerleştir */
 }
 
 .App-logo {
@@ -15,13 +20,14 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  flex-grow: 1; /* .App-header içeriği ekranın geri kalan kısmını doldurur */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  min-height: 0; /* Minimum yüksekliği sıfırla */
 }
 
 .App-link {

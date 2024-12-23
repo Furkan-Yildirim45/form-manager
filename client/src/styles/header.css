@@ -1,6 +1,7 @@
 /* Genel header kapsayıcı */
 .header-container {
-  display: flex;
+  display: flex;padding-top: 20px;
+
   justify-content: center;
   align-items: center;
   padding: 20px;

@@ -1,3 +1,17 @@
+html, body {
+  margin: 0; /* Kenar boşluklarını sıfırla */
+  padding: 0; /* İç boşlukları sıfırla */
+  height: 100%; /* Yüksekliği %100 yaparak ekranı tam olarak kapsamasını sağla */
+  width: 100%; /* Genişliği %100 yaparak ekranı tam olarak kapsamasını sağla */
+}
+
+body {
+  display: flex;
+  flex-direction: column; /* İçeriği dikeyde düzenle */
+  background-color: #f4f6f9; /* Sayfa arka plan rengini ayarla */
+  height: 100vh; /* Sayfa yüksekliği %100, tüm ekranı kaplasın */
+}
+
 .form-container {
   padding: 20px;
   border: 1px solid #ddd;
@@ -5,10 +19,10 @@
   width: 90%;
   margin: 20px auto;
   background-color: #f4f6f9;
-  height: auto;  /* Yükseklik esnek olacak şekilde ayarlandı */
   box-sizing: border-box;
-  overflow-y: auto;  /* Form container içinde içerik çoksa kaydırma çubuğu ekle */
-  max-height: 90vh;  /* Container'ın maksimum yüksekliğini ekranın %90'ı ile sınırla */
+  height: auto;  /* Yükseklik otomatik */
+  display: flex;
+  flex-direction: column;
 }
 
 .form-header {
@@ -25,7 +39,6 @@
   border: 1px solid #ccc;
   box-sizing: border-box; /* Padding ve border'ı input genişliğine dahil eder */
 }
-
 
 .empty-form-state {
   background-color: #fdfdfd;
@@ -44,7 +57,6 @@
   border-radius: 8px;
   background-color: #eef7ff;
 }
-
 
 /* Not alanındaki textarea için genişlik ayarı */
 .note-field textarea {
@@ -116,7 +128,6 @@
   text-align: center;
 }
 
-
 button {
   padding: 12px 25px;
   background-color: #007bff;
@@ -134,7 +145,6 @@ button:hover {
 button:focus {
   outline: none;
 }
-
 
 /* Diğer butonlar için genel stil */
 button:not(.submit-button) {
