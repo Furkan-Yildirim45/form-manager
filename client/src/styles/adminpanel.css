@@ -1,26 +1,65 @@
+/* Genel stil */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to bottom right, #50a3a2, #76d7c4); /* Uyumlu gradient */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Admin Panel genel kapsayıcı */
 .admin-panel {
-    text-align: center;
-    margin: 20px;
-  }
-  
-  .button-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
-  }
-  
-  .panel-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .panel-button:hover {
-    background-color: #0056b3;
-  }
-  
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Panel başlık */
+.panel-title {
+  font-size: 24px;
+  color: #3e8282;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+/* Button konteyner */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Ana buton stili */
+.panel-button {
+  background-color: #007bff; /* Canlı mavi */
+  color: white; /* Yazı rengi */
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 8px; /* Yuvarlatılmış köşeler */
+  cursor: pointer;
+  transition: all 0.3s ease; /* Geçiş efekti */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+}
+
+/* Hover (Üzerine gelindiğinde) efekti */
+.panel-button:hover {
+  background-color: #0056b3; /* Daha koyu mavi */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Gölge yoğunluğu artar */
+}
+
+/* Aktif durum (Tıklanırken) efekti */
+.panel-button:active {
+  background-color: #003c8f; /* Çok koyu mavi */
+  transform: scale(0.97); /* Hafif küçülme efekti */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); /* Gölge küçülür */
+}

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "client": "file:",
     "cra-template": "1.2.0",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.2",
