@@ -10,16 +10,16 @@ const Form = ({ setFormData }) => {
 
   const handleAddField = (type) => {
     if (type === 'note') {
-      setFields([...fields, { type: 'note', content: '' }]);
+      setFields([...fields, { type: 'note', title: 'Not:', content: '' }]);
     } else if (type === 'subheading') {
-      setFields([
-        ...fields,
+      setFields([ 
+        ...fields, 
         {
           type: 'subheading',
           title: '',
           answerType: 'text',
           options: [],
-        },
+        } 
       ]);
     }
   };
@@ -47,13 +47,13 @@ const Form = ({ setFormData }) => {
       formTitle: formTitle,
       fields: fields,
     });
-    navigate('/form-view');
+    // Pass data to form-view page via URL params
+    navigate('/form-view', { state: { formTitle, fields } });
   };
 
   return (
     <div className="form-container">
       <Header />
-
       <div className="form-header">
         <label>Form Başlığı</label>
         <input
@@ -73,7 +73,7 @@ const Form = ({ setFormData }) => {
           <div key={index} className="field-container">
             {field.type === 'note' && (
               <div className="note-field">
-                <label>Not:</label>
+                <label>{field.title}</label>
                 <textarea
                   value={field.content}
                   onChange={(e) => handleFieldChange(index, 'content', e.target.value)}

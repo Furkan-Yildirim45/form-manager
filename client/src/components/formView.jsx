@@ -75,9 +75,16 @@ const FormView = ({ formTitle, fields }) => {
             )}
 
             <div className="form-answer">
-              {field.type === 'note' && (
-                <div className="note-display">
-                  <p>({field.content})</p>
+
+            {field.type === 'note' && (
+                <div className="form-row">
+                  <textarea
+                    id={`note-${index}`}
+                    name={`note-${index}`}
+                    value={formData[`note-${index}`] || ''}
+                    onChange={(e) => handleInputChange(`note-${index}`, e.target.value)}
+                    disabled={true}
+                  />
                 </div>
               )}
 

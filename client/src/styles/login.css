@@ -1,15 +1,3 @@
-/* Genel stil */
-body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    /* background: linear-gradient(to bottom right, #4caf50, #1e88e5); Mavi-yeşil tonlar */
-    background: #50a3a2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: auto;
-  }
-  
   /* Login konteyner */
   .login-container {
     display: flex;
@@ -18,7 +6,7 @@ body {
     width: 100%;
     height: 100%;
   }
-  
+
   /* Login kutusu */
   .login-box {
     background-color: #ffffff;
@@ -28,24 +16,24 @@ body {
     width: 350px;
     text-align: center;
   }
-  
+
   /* Başlık */
   .login-box h2 {
     margin-bottom: 20px;
     color: #333;
   }
-  
+
   /* Input grubu */
   .input-group {
     margin-bottom: 20px;
     text-align: left;
   }
-  
+
   .input-group label {
     font-size: 14px;
     color: #555;
   }
-  
+
   .input-group input {
     width: 100%;
     padding: 10px;
@@ -54,19 +42,20 @@ body {
     border-radius: 5px;
     font-size: 14px;
   }
-  
+
   /* Input focus durumu */
   .input-group input:focus {
     border-color: #4caf50;
     outline: none;
     box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
   }
-  
-/* Login butonu */
-.login-button {
+
+  /* Login butonu */
+  .login-button {
     width: 100%;
     padding: 10px 15px;
-    background-color: #3e8282; /* Temel buton rengi */
+    background-color: #3e8282;
+    /* Temel buton rengi */
     color: white;
     font-size: 16px;
     border: none;
@@ -74,8 +63,8 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
-  
+
   .login-button:hover {
-    background-color: #2f6464; /* Hover durumu */
+    background-color: #2f6464;
+    /* Hover durumu */
   }
-  

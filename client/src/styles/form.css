@@ -1,22 +1,8 @@
-html, body {
-  margin: 0; /* Kenar boşluklarını sıfırla */
-  padding: 0; /* İç boşlukları sıfırla */
-  height: 100%; /* Yüksekliği %100 yaparak ekranı tam olarak kapsamasını sağla */
-  width: 100%; /* Genişliği %100 yaparak ekranı tam olarak kapsamasını sağla */
-}
-
-body {
-  display: flex;
-  flex-direction: column; /* İçeriği dikeyde düzenle */
-  background-color: #f4f6f9; /* Sayfa arka plan rengini ayarla */
-  height: 100vh; /* Sayfa yüksekliği %100, tüm ekranı kaplasın */
-}
-
 .form-container {
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  width: 90%;
+  width: 100vh;
   margin: 20px auto;
   background-color: #f4f6f9;
   box-sizing: border-box;
