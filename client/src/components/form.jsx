@@ -81,7 +81,6 @@ const Form = ({ setFormData }) => {
                 />
               </div>
             )}
-
             {field.type === 'subheading' && (
               <div className="subheading-field">
                 <div className="field-row">

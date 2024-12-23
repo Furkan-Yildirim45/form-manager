@@ -5,6 +5,10 @@
   width: 90%;
   margin: 20px auto;
   background-color: #f4f6f9;
+  height: auto;  /* Yükseklik esnek olacak şekilde ayarlandı */
+  box-sizing: border-box;
+  overflow-y: auto;  /* Form container içinde içerik çoksa kaydırma çubuğu ekle */
+  max-height: 90vh;  /* Container'ın maksimum yüksekliğini ekranın %90'ı ile sınırla */
 }
 
 .form-header {
@@ -41,14 +45,32 @@
   background-color: #eef7ff;
 }
 
-.note-field textarea,
+
+/* Not alanındaki textarea için genişlik ayarı */
+.note-field textarea {
+  width: 100%;  /* Yüzde 100 genişlik ile container'ı doldurur */
+  padding: 12px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box; /* Border ve padding'in genişliği etkilememesi için */
+  resize: none; /* Kullanıcının textarea'yı büyütmesini engelle */
+}
+
+.note-field {
+  max-width: 100%;  /* Maksimum genişlik, container'a uyum sağlar */
+  width: 100%;
+}
+
+/* Diğer input ve select elemanları için */
 .subheading-field input,
 .subheading-field select {
   width: 100%;
   padding: 12px;
   margin-top: 10px;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 8px; 
+  box-sizing: border-box; /* Border ve padding'in genişliği etkilememesi için */
 }
 
 .field-row {
@@ -136,4 +158,8 @@ button.submit-button {
 
 button.submit-button:hover {
   background-color: #218838;  /* Hover rengi */
+}
+
+.dropdown-container button {
+  margin-top: 10px; /* Buton ile önceki öğe arasına boşluk ekler */
 }
