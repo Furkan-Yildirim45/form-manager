@@ -10,6 +10,7 @@ const FormView = ({ formTitle, fields }) => {
   const [formData, setFormData] = useState({});
   const [shareableLink, setShareableLink] = useState('');
   const [isSharedView, setIsSharedView] = useState(false);
+  const [isAccepted, setIsAccepted] = useState(false); // Checkbox için state
 
   useEffect(() => {
     // URL'deki formId parametresini kontrol et
@@ -76,12 +77,12 @@ const FormView = ({ formTitle, fields }) => {
 
             <div className="form-answer">
 
-            {field.type === 'note' && (
+              {field.type === 'note' && (
                 <div className="form-row">
                   <textarea
                     id={`note-${index}`}
                     name={`note-${index}`}
-                    value={formData[`note-${index}`] || ''}
+                    value={field.content}
                     onChange={(e) => handleInputChange(`note-${index}`, e.target.value)}
                     disabled={true}
                   />
@@ -168,23 +169,36 @@ const FormView = ({ formTitle, fields }) => {
       </div>
 
       {!isSharedView && (
-        <div className="form-footer">
-          <button onClick={handleDownloadPDF} className="download-button">
-            Formu İndirmek İçin Tıklayın
-          </button>
-          <button className="save-button">Kaydet</button>
-          <button onClick={handleShareableLink} className="share-button">
-            Paylaşım Linki Oluştur
-          </button>
-          {shareableLink && (
-            <div className="shareable-link">
-              <p>Paylaşım Linki:</p>
-              <a href={shareableLink} target="_blank" rel="noopener noreferrer">
-                {shareableLink}
-              </a>
+        <>
+          <div className="accept-checkbox-container">
+            <div className="accept-checkbox">
+              <input
+                type="checkbox"
+                id="accept-checkbox"
+                checked={isAccepted}
+                onChange={(e) => setIsAccepted(e.target.checked)}
+              />
+              <label htmlFor="accept-checkbox">Bilgilerimin doğruluğunu kabul ediyorum.</label>
             </div>
-          )}
-        </div>
+          </div>
+          <div className="form-footer">
+            <button onClick={handleDownloadPDF} className="download-button">
+              Formu İndir
+            </button>
+            <button className="save-button">Kaydet</button>
+            <button onClick={handleShareableLink} className="share-button">
+              Paylaşım Linki Oluştur
+            </button>
+            {shareableLink && (
+              <div className="shareable-link">
+                <p>Paylaşım Linki:</p>
+                <a href={shareableLink} target="_blank" rel="noopener noreferrer">
+                  {shareableLink}
+                </a>
+              </div>
+            )}
+          </div>
+        </>
       )}
 
       {isSharedView && <button className="save-button">Kaydet</button>}

@@ -53,13 +53,14 @@
   font-size: 16px;
   font-weight: bold;
   color: #fff;
+  white-space: normal; /* İçeriğin satır sarmasına izin verir */
+  word-wrap: break-word; /* Çok uzun kelimeleri kırar ve bir sonraki satıra taşır */
+  overflow-wrap: break-word; /* Daha modern bir alternatif, uzun kelimeleri kırar */
 }
 
 .form-answer {
   width: 100%;
-  /* Konteyner genişliği kadar */
   max-width: 100%;
-  /* Maksimum genişlik ayarı */
   box-sizing: border-box;
   /* Toplam genişlik kontrolü */
   overflow: hidden;
@@ -84,6 +85,7 @@
   border-radius: 4px;
   height: 80px;
   resize: vertical;
+  color: white;
 }
 
 .form-answer input[type="text"] {
@@ -213,8 +215,11 @@
 }
 
 .form-footer {
-  text-align: center;
-  margin: 20px 0;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Butonlar arasında boşluk */
+  flex-wrap: wrap; /* Küçük ekranlarda alt alta gelmeleri için */
 }
 
 .save-button {
@@ -270,8 +275,6 @@
 }
 
 .share-button {
-  margin-top: 10px;
-  background-color: #4caf50;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -279,20 +282,22 @@
   cursor: pointer;
 }
 
-.share-button:hover {
-  background-color: #45a049;
-}
-
 .shareable-link {
   margin-top: 10px;
   font-size: 14px;
+  color: blue;
 }
 
 .shareable-link a {
-  color: #1e90ff;
+  color: white;
   text-decoration: none;
 }
 
 .shareable-link a:hover {
   text-decoration: underline;
+}
+
+.accept-checkbox{
+  padding-top: 12px;
+  color: white;
 }
