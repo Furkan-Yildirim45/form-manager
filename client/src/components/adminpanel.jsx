@@ -9,13 +9,16 @@ const AdminPanel = () => {
   return (
     <div className="admin-panel">
       <Header />
-      <div className="button-container">
-        <button onClick={() => navigate('/form')} className="panel-button">
-          Form Oluştur
-        </button>
-        <button onClick={() => navigate('/pdf-view')} className="panel-button">
-          PDFleri Görüntüle
-        </button>
+      <div className="panel-container">
+        <h2 className="panel-title">Admin Panel</h2>
+        <div className="button-container">
+          <button onClick={() => navigate('/form')} className="panel-button">
+            Form Oluştur
+          </button>
+          <button onClick={() => navigate('/pdf-view')} className="panel-button">
+            PDFleri Görüntüle
+          </button>
+        </div>
       </div>
     </div>
   );

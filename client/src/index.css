@@ -1,10 +1,25 @@
 body {
-  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  margin: 0; /* Kenar boşluklarını sıfırla */
+  padding: 0; /* İç boşlukları sıfırla */
+  min-height: 100vh;
+  width: 100%; /* Genişliği %100 yaparak ekranı tam olarak kapsamasını sağla */
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #50a3a2; /* Arkaplan rengi */
+  font-family: 'Arial', sans-serif;
+  min-height: 100vh; /* Görünüm yüksekliğini tamamen kapsaması için */
 }
 
 code {
