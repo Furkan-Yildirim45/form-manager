@@ -1,34 +1,39 @@
 import React, { useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import '../styles/login.css';
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
-  const [credentials, setCredentials] = useState({ username: '', password: '' });
 
-  const handleInputChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    navigate('/admin-panel');
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/form');
+    } catch (error) {
+      setError('Giriş başarısız: ' + error.message);
+    }
   };
 
   return (
     <div className="login-container">
       <div className="login-box">
         <h2>Admin Giriş</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleLogin}>
           <div className="input-group">
-            <label htmlFor="username">Kullanıcı Adı</label>
+            <label htmlFor="email">Email</label>
             <input
-              type="text"
-              id="username"
-              name="username"
-              value={credentials.username}
-              onChange={handleInputChange}
-              placeholder="Kullanıcı adınızı girin"
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
             />
           </div>
           <div className="input-group">
@@ -37,14 +42,15 @@ const Login = () => {
               type="password"
               id="password"
               name="password"
-              value={credentials.password}
-              onChange={handleInputChange}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Şifrenizi girin"
             />
           </div>
           <button type="submit" className="login-button">
             Giriş Yap
           </button>
+          {error && <p style={{ color: 'red' }}>{error}</p>}
         </form>
       </div>
     </div>

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Form from './components/form'; // Form oluşturma sayfası
-import FormView from './components/formView'; // Form görüntüleme sayfası
-import AdminPanel from './components/adminpanel'; // Admin Paneli
-import Login from './components/login'; // Admin giriş sayfası
-import Register from './components/register'; // Admin kayıt sayfası
-import LoginPage from './components/loginpage'; // Giriş sayfası
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './components/login';
+import Register from './components/register';
+import AdminPanel from './components/adminpanel';
+import Form from './components/form';
+import FormView from './components/formView';
+import LoginPage from './components/loginpage';
 
 const App = () => {
   const [formData, setFormData] = useState({
@@ -14,25 +16,30 @@ const App = () => {
   });
 
   return (
-    <Router>
-      <Routes>
-        {/* Giriş sayfası */}
-        <Route path="/" element={<LoginPage />} />
-        {/* Form oluşturma sayfası */}
-        <Route path="/form" element={<Form setFormData={setFormData} />} />
-        {/* Form görüntüleme sayfası */}
-        <Route
-          path="/form-view"
-          element={<FormView formTitle={formData.formTitle} fields={formData.fields} />}
-        />
-        {/* Admin giriş sayfası */}
-        <Route path="/login" element={<Login />} />
-        {/* Admin kayıt sayfası */}
-        <Route path="/register" element={<Register />} />
-        {/* Admin paneli */}
-        <Route path="/admin-panel" element={<AdminPanel />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/adminpanel" element={
+            <ProtectedRoute>
+              <AdminPanel />
+            </ProtectedRoute>
+          } />
+          <Route path="/form" element={
+            <ProtectedRoute>
+              <Form setFormData={setFormData} />
+            </ProtectedRoute>
+          } />
+          <Route path="/form-view/:formId" element={
+            <ProtectedRoute>
+              <FormView />
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
 

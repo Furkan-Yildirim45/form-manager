@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './header';
 import '../styles/form.css';
+import axios from "axios";
+import { auth } from '../firebase';
 
 const Form = ({ setFormData }) => {
   const navigate = useNavigate();
@@ -32,6 +34,9 @@ const Form = ({ setFormData }) => {
 
   const handleAddOption = (index) => {
     const updatedFields = [...fields];
+    if (!updatedFields[index].options) {
+      updatedFields[index].options = [];
+    }
     updatedFields[index].options.push('');
     setFields(updatedFields);
   };
@@ -42,13 +47,46 @@ const Form = ({ setFormData }) => {
     setFields(updatedFields);
   };
 
-  const handleSubmit = () => {
-    setFormData({
-      formTitle: formTitle,
-      fields: fields,
-    });
-    // Pass data to form-view page via URL params
-    navigate('/form-view', { state: { formTitle, fields } });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const formToSubmit = {
+        title: formTitle,
+        fields: fields.map(field => ({
+          ...field,
+          ...(field.options?.length === 0 && { options: undefined })
+        })),
+        createdAt: new Date()
+      };
+
+      // Global form state'i güncelle
+      setFormData(formToSubmit);
+
+      const token = await auth.currentUser.getIdToken();
+      console.log('Token alındı:', token);
+
+      const response = await axios.post('http://localhost:5000/api/forms', formToSubmit, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log("Sunucu yanıtı:", response.data);
+
+      // Form-view sayfasına yönlendir
+      if (response.data.id) {
+        navigate(`/form-view/${response.data.id}`);
+      } else {
+        console.error("Form ID alınamadı");
+      }
+    } catch (error) {
+      console.error("Form gönderme hatası:", error);
+      if (error.response) {
+        console.error('Sunucu yanıtı:', error.response.data);
+      }
+    }
   };
 
   return (
@@ -64,79 +102,76 @@ const Form = ({ setFormData }) => {
         />
       </div>
 
-      {fields.length === 0 ? (
-        <div className="empty-form-state">
-          <p>Formunuzu oluşturmak için başlık ekleyin veya bir öğe ekleyin.</p>
-        </div>
-      ) : (
-        fields.map((field, index) => (
-          <div key={index} className="field-container">
-            {field.type === 'note' && (
-              <div className="note-field">
-                <label>{field.title}</label>
-                <textarea
-                  value={field.content}
-                  onChange={(e) => handleFieldChange(index, 'content', e.target.value)}
-                  placeholder="Notunuzu yazın..."
-                />
-              </div>
-            )}
-            {field.type === 'subheading' && (
-              <div className="subheading-field">
-                <div className="field-row">
-                  <div className="field-item">
-                    <label>Yan Başlık:</label>
+      {fields.map((field, index) => (
+        <div key={index} className="field-container">
+          {field.type === 'note' && (
+            <div className="note-field">
+              <input
+                type="text"
+                value={field.title}
+                onChange={(e) => handleFieldChange(index, 'title', e.target.value)}
+                placeholder="Not başlığı"
+              />
+              <textarea
+                value={field.content}
+                onChange={(e) => handleFieldChange(index, 'content', e.target.value)}
+                placeholder="Not içeriği"
+              />
+            </div>
+          )}
+
+          {field.type === 'subheading' && (
+            <div className="subheading-field">
+              <input
+                type="text"
+                value={field.title}
+                onChange={(e) => handleFieldChange(index, 'title', e.target.value)}
+                placeholder="Yan başlık"
+              />
+              <select
+                value={field.answerType}
+                onChange={(e) => handleFieldChange(index, 'answerType', e.target.value)}
+              >
+                <option value="text">Metin</option>
+                <option value="multiple-choice">Çoktan Seçmeli</option>
+                <option value="checkbox">Onay Kutusu</option>
+                <option value="file-upload">Dosya Yükleme</option>
+              </select>
+
+              {(field.answerType === 'multiple-choice' || field.answerType === 'checkbox') && (
+                <div className="options-container">
+                  {field.options.map((option, optIndex) => (
                     <input
+                      key={optIndex}
                       type="text"
-                      value={field.title}
-                      onChange={(e) => handleFieldChange(index, 'title', e.target.value)}
-                      placeholder="Başlığı girin"
+                      value={option}
+                      onChange={(e) => handleOptionChange(index, optIndex, e.target.value)}
+                      placeholder="Seçenek"
                     />
-                  </div>
-
-                  <div className="field-item">
-                    <label>Cevap Türü:</label>
-                    <select
-                      value={field.answerType}
-                      onChange={(e) => handleFieldChange(index, 'answerType', e.target.value)}
-                    >
-                      <option value="text">Yazılı Cevap</option>
-                      <option value="multiple-choice">Seçmeli Cevap</option>
-                      <option value="checkbox">İşaretlemeli Cevap</option>
-                      <option value="file-upload">Dosya Yükleme</option>
-                    </select>
-                  </div>
+                  ))}
+                  <button type="button" onClick={() => handleAddOption(index)}>
+                    + Seçenek Ekle
+                  </button>
                 </div>
-
-                {(field.answerType === 'multiple-choice' || field.answerType === 'checkbox') && (
-                  <div className="dropdown-container">
-                    <label>Seçenekler:</label>
-                    {field.options.map((option, optIndex) => (
-                      <div key={optIndex} className="option-input">
-                        <input
-                          type="text"
-                          value={option}
-                          onChange={(e) => handleOptionChange(index, optIndex, e.target.value)}
-                          placeholder="Seçenek girin"
-                        />
-                      </div>
-                    ))}
-                    <button onClick={() => handleAddOption(index)}>+ Seçenek Ekle</button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        ))
-      )}
+              )}
+            </div>
+          )}
+        </div>
+      ))}
 
       <div className="button-container">
-        <button onClick={() => handleAddField('note')}>Not Ekle</button>
-        <button onClick={() => handleAddField('subheading')}>Yan Başlık Ekle</button>
+        <button type="button" onClick={() => handleAddField('note')}>
+          Not Ekle
+        </button>
+        <button type="button" onClick={() => handleAddField('subheading')}>
+          Yan Başlık Ekle
+        </button>
       </div>
 
       <div className="submit-container">
-        <button className="submit-button" onClick={handleSubmit}>Formu Oluştur</button>
+        <button type="submit" onClick={handleSubmit}>
+          Formu Oluştur
+        </button>
       </div>
     </div>
   );

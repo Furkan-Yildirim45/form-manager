@@ -1,0 +1,21 @@
+# dependencies
+/node_modules
+
+# environment variables
+.env
+
+# logs
+*.log
+npm-debug.log*
+
+# Firebase service account
+serviceAccountKey.json
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# misc
+.DS_Store 

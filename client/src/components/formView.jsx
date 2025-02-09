@@ -3,39 +3,54 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import '../styles/formView.css';
 import amblem from '../assets/amblem.png';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { auth } from '../firebase';
+import Header from './header';
 
-const FormView = ({ formTitle, fields }) => {
+const FormView = () => {
+  const { formId } = useParams();
+  const [form, setForm] = useState(null);
+  const [loading, setLoading] = useState(true);
   const formRef = useRef();
   const [uploadedImages, setUploadedImages] = useState({});
   const [formData, setFormData] = useState({});
   const [shareableLink, setShareableLink] = useState('');
   const [isSharedView, setIsSharedView] = useState(false);
-  const [isAccepted, setIsAccepted] = useState(false); // Checkbox için state
+  const [isAccepted, setIsAccepted] = useState(false);
 
+  // Firebase'den form verilerini çek
   useEffect(() => {
-    // URL'deki formId parametresini kontrol et
-    const queryParams = new URLSearchParams(window.location.search);
-    if (queryParams.has('formId')) {
-      setIsSharedView(true);
+    const getFormData = async () => {
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const response = await axios.get(`http://localhost:5000/api/forms/${formId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setForm(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Form getirme hatası:", error);
+        setLoading(false);
+      }
+    };
+
+    if (formId) {
+      getFormData();
     }
-  }, []);
+  }, [formId]);
 
   const handleDownloadPDF = () => {
     const input = formRef.current;
-
-    html2canvas(input, {
-      scale: 2,
-      ignoreElements: (el) =>
-        el.classList.contains('form-footer') || el.classList.contains('shareable-link'),
-    }).then((canvas) => {
+    html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-
-      const imgWidth = 210; // PDF genişliği (mm)
+      const imgWidth = 210;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
       pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      pdf.save('form-bilgileri.pdf');
+      pdf.save('form.pdf');
     });
   };
 
@@ -52,156 +67,114 @@ const FormView = ({ formTitle, fields }) => {
   };
 
   const handleShareableLink = () => {
-    // Formu paylaşıldığında, benzersiz bir ID oluşturuyoruz
-    const generatedLink = `${window.location.origin}${window.location.pathname}?formId=${Date.now()}`;
+    const generatedLink = `${window.location.origin}/form-view/${formId}?shared=true`;
     setShareableLink(generatedLink);
   };
 
+  if (loading) {
+    return <div>Yükleniyor...</div>;
+  }
+
+  if (!form) {
+    return <div>Form bulunamadı</div>;
+  }
+
   return (
-    <div ref={formRef} className="form-view-container">
-      <div className="form-header">
-        <img src={amblem} alt="Balıkesir Üniversitesi Amblemi" className="logo" />
-        <h1>T.C. BALIKESİR ÜNİVERSİTESİ</h1>
-      </div>
+    <div className="form-container">
+      <Header />
+      <div className="form-view" ref={formRef}>
+        <div className="form-header">
+          <img src={amblem} alt="Amblem" className="amblem" />
+          <h2>T.C.</h2>
+          <h2>BANDIRMA ONYEDİ EYLÜL ÜNİVERSİTESİ</h2>
+          <h2>{form.title}</h2>
+        </div>
 
-      <h2 className="form-title">{formTitle}</h2>
-
-      <div className="form-content">
-        {fields.map((field, index) => (
-          <div key={index} className="form-row">
-            {field.type === 'subheading' && (
-              <div className="form-label">
-                <strong>{field.title}</strong>
-              </div>
-            )}
-
-            <div className="form-answer">
-
+        <div className="form-content">
+          {form.fields.map((field, index) => (
+            <div key={index} className="form-field">
               {field.type === 'note' && (
-                <div className="form-row">
-                  <textarea
-                    id={`note-${index}`}
-                    name={`note-${index}`}
-                    value={field.content}
-                    onChange={(e) => handleInputChange(`note-${index}`, e.target.value)}
-                    disabled={true}
-                  />
+                <div className="note-section">
+                  <h3>{field.title}</h3>
+                  <p>{field.content}</p>
                 </div>
               )}
 
-              {field.answerType === 'text' && (
-                <input
-                  type="text"
-                  placeholder="Cevabınızı yazın..."
-                  value={formData[index] || ''}
-                  onChange={(e) => handleInputChange(index, e.target.value)}
-                  disabled={isSharedView}
-                />
-              )}
-
-              {field.answerType === 'multiple-choice' && (
-                <select
-                  value={formData[index] || ''}
-                  onChange={(e) => handleInputChange(index, e.target.value)}
-                  disabled={isSharedView}
-                >
-                  <option value="">Seçiniz</option>
-                  {field.options.map((option, optIndex) => (
-                    <option key={optIndex} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              )}
-
-              {field.answerType === 'checkbox' && (
-                <ul className="checkbox-list">
-                  {field.options.map((option, optIndex) => (
-                    <li key={optIndex}>
-                      <input
-                        type="checkbox"
-                        id={`check-${optIndex}`}
-                        checked={formData[index]?.includes(option)}
-                        onChange={(e) => {
-                          const updatedAnswers = e.target.checked
-                            ? [...(formData[index] || []), option]
-                            : formData[index].filter((opt) => opt !== option);
-                          handleInputChange(index, updatedAnswers);
-                        }}
-                        disabled={isSharedView}
-                      />
-                      <label htmlFor={`check-${optIndex}`}>{option}</label>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              {field.answerType === 'file-upload' && (
-                <div className="file-upload">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleFileUpload(index, e.target.files[0])}
-                    disabled={isSharedView}
-                  />
-                  {uploadedImages[index] && (
-                    <img
-                      src={uploadedImages[index]}
-                      alt="Yüklenen Görsel"
-                      style={{ width: '100px', height: '100px', marginTop: '10px' }}
+              {field.type === 'subheading' && (
+                <div className="input-section">
+                  <label>{field.title}</label>
+                  {field.answerType === 'text' && (
+                    <input
+                      type="text"
+                      value={formData[index] || ''}
+                      onChange={(e) => handleInputChange(index, e.target.value)}
                     />
+                  )}
+                  {field.answerType === 'multiple-choice' && (
+                    <div className="radio-group">
+                      {field.options.map((option, optIndex) => (
+                        <div key={optIndex} className="radio-option">
+                          <input
+                            type="radio"
+                            name={`field-${index}`}
+                            value={option}
+                            onChange={(e) => handleInputChange(index, e.target.value)}
+                            checked={formData[index] === option}
+                          />
+                          <label>{option}</label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {field.answerType === 'file-upload' && (
+                    <div className="file-upload">
+                      <input
+                        type="file"
+                        onChange={(e) => handleFileUpload(index, e.target.files[0])}
+                      />
+                      {uploadedImages[index] && (
+                        <img src={uploadedImages[index]} alt="Yüklenen Dosya" />
+                      )}
+                    </div>
                   )}
                 </div>
               )}
+            </div>
+          ))}
+        </div>
 
-              {field.answerType === 'link' && (
-                <input
-                  type="url"
-                  placeholder="Bağlantı linki giriniz..."
-                  value={formData[index] || ''}
-                  onChange={(e) => handleInputChange(index, e.target.value)}
-                  disabled={isSharedView}
-                />
-              )}
+        <div className="form-footer">
+          <div className="acceptance-section">
+            <input
+              type="checkbox"
+              checked={isAccepted}
+              onChange={(e) => setIsAccepted(e.target.checked)}
+            />
+            <label>Yukarıdaki bilgilerin doğruluğunu onaylıyorum.</label>
+          </div>
+
+          <div className="signature-section">
+            <div className="signature-box">
+              <p>Ad Soyad:</p>
+              <p>İmza:</p>
+              <p>Tarih:</p>
             </div>
           </div>
-        ))}
+        </div>
       </div>
 
-      {!isSharedView && (
-        <>
-          <div className="accept-checkbox-container">
-            <div className="accept-checkbox">
-              <input
-                type="checkbox"
-                id="accept-checkbox"
-                checked={isAccepted}
-                onChange={(e) => setIsAccepted(e.target.checked)}
-              />
-              <label htmlFor="accept-checkbox">Bilgilerimin doğruluğunu kabul ediyorum.</label>
-            </div>
+      <div className="form-actions">
+        <button onClick={handleDownloadPDF} disabled={!isAccepted}>
+          PDF İndir
+        </button>
+        <button onClick={handleShareableLink}>Paylaşım Linki Oluştur</button>
+        {shareableLink && (
+          <div className="shareable-link">
+            <p>Paylaşım Linki:</p>
+            <input type="text" value={shareableLink} readOnly />
           </div>
-          <div className="form-footer">
-            <button onClick={handleDownloadPDF} className="download-button">
-              Formu İndir
-            </button>
-            <button className="save-button">Kaydet</button>
-            <button onClick={handleShareableLink} className="share-button">
-              Paylaşım Linki Oluştur
-            </button>
-            {shareableLink && (
-              <div className="shareable-link">
-                <p>Paylaşım Linki:</p>
-                <a href={shareableLink} target="_blank" rel="noopener noreferrer">
-                  {shareableLink}
-                </a>
-              </div>
-            )}
-          </div>
-        </>
-      )}
-
-      {isSharedView && <button className="save-button">Kaydet</button>}
+        )}
+      </div>
     </div>
   );
 };
