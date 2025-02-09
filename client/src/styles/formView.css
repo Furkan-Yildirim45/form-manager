@@ -101,7 +101,10 @@
 .form-actions {
   margin-top: 20px;
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
+  align-items: flex-start;
+  max-width: 100%;
 }
 
 .form-actions button {
@@ -111,6 +114,9 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .form-actions button:disabled {
@@ -119,15 +125,24 @@
 }
 
 .shareable-link {
+  flex-basis: 100%;
   margin-top: 15px;
+}
+
+.shareable-link p {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  color: #666;
 }
 
 .shareable-link input {
   width: 100%;
+  max-width: 500px;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  margin-top: 5px;
+  font-size: 14px;
+  color: #333;
 }
 
 /* Yazdırma için özel stiller */
@@ -146,4 +161,155 @@
     box-shadow: none;
     padding: 0;
   }
+}
+
+/* Mevcut stillere eklenecek */
+
+.file-upload-section {
+  margin: 10px 0;
+}
+
+.file-preview {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f9f9f9;
+}
+
+.uploaded-image {
+  max-width: 200px;
+  max-height: 200px;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+.pdf-preview, .file-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 4px;
+}
+
+.pdf-preview i, .file-preview i {
+  font-size: 24px;
+  color: #666;
+}
+
+.file-preview span {
+  word-break: break-all;
+}
+
+.formview-container {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.formview-nav {
+  background: #fff;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 2rem;
+}
+
+.formview-content {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-header {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+.form-header h2 {
+  margin: 0 0 0.5rem 0;
+  color: #2C3E50;
+}
+
+.form-date {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.form-fields {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.field-item {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.field-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.note-field h3 {
+  color: #2C3E50;
+  margin: 0 0 0.5rem 0;
+}
+
+.note-field p {
+  color: #666;
+  margin: 0;
+}
+
+.subheading-field h3 {
+  color: #2C3E50;
+  margin: 0 0 1rem 0;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.back-button {
+  padding: 0.5rem 1rem;
+  background: #4CA1AF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: #3d8a96;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.error {
+  color: #dc3545;
 }

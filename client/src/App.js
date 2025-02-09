@@ -32,11 +32,7 @@ const App = () => {
               <Form setFormData={setFormData} />
             </ProtectedRoute>
           } />
-          <Route path="/form-view/:formId" element={
-            <ProtectedRoute>
-              <FormView />
-            </ProtectedRoute>
-          } />
+          <Route path="/form-view/:formId" element={<FormView />} />
         </Routes>
       </Router>
     </AuthProvider>

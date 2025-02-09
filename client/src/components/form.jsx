@@ -4,6 +4,8 @@ import Header from './header';
 import '../styles/form.css';
 import axios from "axios";
 import { auth } from '../firebase';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const Form = ({ setFormData }) => {
   const navigate = useNavigate();
@@ -66,18 +68,13 @@ const Form = ({ setFormData }) => {
       const token = await auth.currentUser.getIdToken();
       console.log('Token alındı:', token);
 
-      const response = await axios.post('http://localhost:5000/api/forms', formToSubmit, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const docRef = await addDoc(collection(db, 'formlar'), formToSubmit);
 
-      console.log("Sunucu yanıtı:", response.data);
+      console.log("Sunucu yanıtı:", docRef);
 
       // Form-view sayfasına yönlendir
-      if (response.data.id) {
-        navigate(`/form-view/${response.data.id}`);
+      if (docRef.id) {
+        navigate(`/form-view/${docRef.id}`);
       } else {
         console.error("Form ID alınamadı");
       }

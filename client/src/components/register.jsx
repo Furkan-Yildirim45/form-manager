@@ -1,53 +1,82 @@
-import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import '../styles/register.css';
 
-function Register() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const navigate = useNavigate();
+const Register = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            navigate("/login"); // Başarılı kayıt sonrası login sayfasına yönlendir
-        } catch (error) {
-            setError("Kayıt başarısız: " + error.message);
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    return (
-        <div className="register-container">
-            <h2>Admin Kayıt</h2>
-            <form onSubmit={handleRegister}>
-                <label>
-                    Email:
-                    <input
-                        type="email"
-                        name="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Yeni kullanıcı emailinizi girin"
-                    />
-                </label>
-                <label>
-                    Şifre:
-                    <input
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Şifrenizi girin"
-                    />
-                </label>
-                <button type="submit">Kayıt Ol</button>
-                {error && <p style={{color: 'red'}}>{error}</p>}
-            </form>
-        </div>
-    );
-}
+    try {
+      // Firebase Authentication ile kullanıcı oluştur
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Firestore'a kullanıcı bilgilerini kaydet
+      const db = getFirestore();
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email,
+        role: 'user', // Varsayılan olarak user rolü atanıyor
+        createdAt: new Date().toISOString()
+      });
+
+      // Başarılı kayıt sonrası login sayfasına yönlendir
+      navigate('/login');
+    } catch (error) {
+      console.error('Kayıt hatası:', error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="register-container">
+      <div className="register-form">
+        <h2 className="register-title">Kullanıcı Kayıt</h2>
+        {error && <p className="error-message">{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="Email adresinizi girin"
+            />
+          </div>
+          <div className="form-group">
+            <label>Şifre</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Şifrenizi girin"
+            />
+          </div>
+          <button 
+            type="submit" 
+            className="register-button"
+            disabled={loading}
+          >
+            {loading ? 'Kaydediliyor...' : 'Kayıt Ol'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 export default Register;

@@ -1,70 +1,156 @@
-  /* Login konteyner */
-  .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-  }
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: transparent;
+}
 
-  /* Login kutusu */
-  .login-box {
-    background-color: #ffffff;
-    padding: 30px 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    width: 350px;
-    text-align: center;
-  }
+.login-form {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  backdrop-filter: blur(10px);
+}
 
-  /* Başlık */
-  .login-box h2 {
-    margin-bottom: 20px;
-    color: #333;
-  }
+.login-tabs {
+  display: flex;
+  margin: 0 0 30px 0;
+  border-radius: 30px;
+  background: #E8EDF2;
+  padding: 4px;
+  width: 100%;
+}
 
-  /* Input grubu */
-  .input-group {
-    margin-bottom: 20px;
-    text-align: left;
-  }
+.tab-button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: #666;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+  border-radius: 30px;
+}
 
-  .input-group label {
-    font-size: 14px;
-    color: #555;
-  }
+.tab-button.active {
+  color: #fff;
+  background: #007BFF;
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.25);
+}
 
-  .input-group input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-  }
+.tab-button:not(.active) {
+  color: #666;
+  background: transparent;
+}
 
-  /* Input focus durumu */
-  .input-group input:focus {
-    border-color: #4caf50;
-    outline: none;
-    box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
-  }
+.tab-button:not(.active):hover {
+  color: #007BFF;
+  background: rgba(0, 123, 255, 0.1);
+}
 
-  /* Login butonu */
-  .login-button {
-    width: 100%;
-    padding: 10px 15px;
-    background-color: #3e8282;
-    /* Temel buton rengi */
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
+.login-title {
+  color: #2C3E50;
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 24px;
+  font-weight: 600;
+}
 
-  .login-button:hover {
-    background-color: #2f6464;
-    /* Hover durumu */
-  }
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2C3E50;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e1e1e1;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #4CA1AF;
+  box-shadow: 0 0 0 3px rgba(76, 161, 175, 0.1);
+  background: #fff;
+}
+
+.login-button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(145deg, #4CA1AF, #2C3E50);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 161, 175, 0.2);
+}
+
+.login-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  margin: 10px 0;
+  text-align: center;
+  padding: 10px;
+  background: rgba(231, 76, 60, 0.1);
+  border-radius: 6px;
+}
+
+.form-group input::placeholder {
+  color: #999;
+  font-size: 14px;
+}
+
+.form-group input:hover {
+  border-color: #4CA1AF;
+}
+
+.form-group input:focus + label {
+  color: #4CA1AF;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.login-button:disabled {
+  animation: pulse 1.5s infinite;
+}
