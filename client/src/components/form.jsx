@@ -53,13 +53,30 @@ const Form = ({ setFormData }) => {
     e.preventDefault();
     
     try {
+      // Undefined değerleri temizle ve options dizisini kontrol et
+      const cleanFields = fields.map(field => {
+        const cleanField = { ...field };
+        
+        // Boş options dizisini null olarak ayarla
+        if (Array.isArray(cleanField.options) && cleanField.options.length === 0) {
+          delete cleanField.options;
+        }
+        
+        // Undefined değerleri objeden temizle
+        Object.keys(cleanField).forEach(key => {
+          if (cleanField[key] === undefined) {
+            delete cleanField[key];
+          }
+        });
+        
+        return cleanField;
+      });
+
       const formToSubmit = {
-        title: formTitle,
-        fields: fields.map(field => ({
-          ...field,
-          ...(field.options?.length === 0 && { options: undefined })
-        })),
-        createdAt: new Date()
+        title: formTitle || '',  // Eğer formTitle undefined ise boş string kullan
+        fields: cleanFields,
+        createdAt: new Date(),
+        userId: auth.currentUser.uid  // Formun sahibinin userId'sini ekliyoruz
       };
 
       // Global form state'i güncelle
@@ -70,11 +87,15 @@ const Form = ({ setFormData }) => {
 
       const docRef = await addDoc(collection(db, 'formlar'), formToSubmit);
 
-      console.log("Sunucu yanıtı:", docRef);
+      console.log("Form başarıyla oluşturuldu, döküman referansı:", docRef);
+      console.log("Döküman ID:", docRef.id);
 
       // Form-view sayfasına yönlendir
       if (docRef.id) {
-        navigate(`/form-view/${docRef.id}`);
+        console.log("Form-view sayfasına yönlendiriliyor:", `/form-view/${docRef.id}`);
+        setTimeout(() => {
+          navigate(`/form-view/${docRef.id}`);
+        }, 100);
       } else {
         console.error("Form ID alınamadı");
       }

@@ -20,6 +20,21 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'Backend bağlantısı başarılı!' });
 });
 
+// Test endpoint'i
+app.get('/test-firebase', async (req, res) => {
+    try {
+        // Herhangi bir koleksiyona erişmeyi deneyin
+        const testDoc = await db.collection('test').doc('test').get();
+        res.json({ status: 'Firebase connection successful!' });
+    } catch (error) {
+        console.error('Firebase connection error:', error);
+        res.status(500).json({ 
+            error: 'Firebase connection failed', 
+            details: error.message 
+        });
+    }
+});
+
 // Form oluşturma route'u
 app.post('/api/forms', async (req, res) => {
   try {
